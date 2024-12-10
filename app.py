@@ -12,7 +12,7 @@ st.write("Unggah gambar daun mangga untuk memprediksi apakah daun tersebut sehat
 # Definisi model
 def create_model():
     model = Sequential([
-        EfficientNetB0(weights='imagenet', include_top=False, input_shape=(224, 224, 3)),
+        EfficientNetB0(weights=None, include_top=False, input_shape=(224, 224, 3)),
         GlobalAveragePooling2D(),
         Dense(3, activation='softmax')  # Jumlah kelas
     ])
@@ -23,7 +23,7 @@ weights_path = 'my_model_weights-v1.weights.h5'  # Sesuaikan path jika berbeda
 model = create_model()
 
 try:
-    model.load_weights(weights_path, by_name=True, skip_mismatch=True)
+    model.load_weights(weights_path)
     st.success("Bobot model berhasil dimuat.")
 except Exception as e:
     st.error(f"Gagal memuat bobot: {e}")
