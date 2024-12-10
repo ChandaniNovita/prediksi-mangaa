@@ -5,6 +5,10 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.applications import EfficientNetB0
 import streamlit as st
 
+# Judul Aplikasi
+st.title("Prediksi Penyakit Daun Mangga")
+st.write("Unggah gambar daun mangga untuk memprediksi apakah daun tersebut sehat atau mengidap penyakit tertentu.")
+
 # Definisi model
 def create_model():
     model = Sequential([
@@ -41,7 +45,18 @@ def predict_image(image_path, model):
 uploaded_file = st.file_uploader("Unggah gambar daun (.jpg, .png)", type=["jpg", "png"])
 if uploaded_file:
     st.image(uploaded_file, caption="Gambar yang diunggah", use_column_width=True)
+
+    # Simpan gambar yang diunggah
     with open("uploaded_image.jpg", "wb") as f:
         f.write(uploaded_file.getbuffer())
+    
+    # Prediksi gambar
     prediction = predict_image("uploaded_image.jpg", model)
-    st.write(f"Hasil prediksi: {prediction}")
+    
+    # Tampilkan hasil prediksi
+    class_labels = ['Anthracnose', 'Bacterial Canker', 'Healthy']  # Ganti dengan label sebenarnya
+    predicted_class = class_labels[prediction.argmax()]
+    confidence = prediction.max()
+
+    st.write(f"**Prediksi:** {predicted_class}")
+    st.write(f"**Kepercayaan:** {confidence:.2f}")
